@@ -1,0 +1,61 @@
+body {
+    background-image: url("/img/background.png");
+}
+
+#euro-value {
+	position: absolute;
+	top: 144px;
+	left: 92px;
+	font-size: 35px;
+	color: white;
+}
+
+#debicoins {
+	position: absolute;
+	top: 148px;
+	left: 182px;
+	font-size: 30px;
+	color: white;
+}
+
+#ether-value {
+	position: absolute;
+	top: 156px;
+	left: 265px;
+	font-size: 24px;
+	color: white;
+}
+
+.progressbar {
+	width: 360px!important;
+    position: absolute!important;
+    height: 52px!important;
+    top: 258px!important;
+    left: 28px!important;
+    background-color: #77d1ed!important;
+}
+
+.progress-bar {
+	background-color: #22ace3!important;
+	font-size: 30px!important;
+	padding-top: 15px;
+}
+
+.progressCircle {
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	top: 390px;
+	left: 134px;
+	border-radius: 50%;
+}
+
+#progress-value {
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	top: 20px;
+	left: 60px;
+	color: #22ace3!important;
+	font-size: 48px;
+}
