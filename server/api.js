@@ -14,7 +14,7 @@ const VisaAPIClient = require('../libs/visaapiclient.js');
 const assert = require('chai').assert;
 const randomstring = require('randomstring');
 
-const userId = config.userId ;
+const userId = config.userId;
 const password = config.password;
 const keyFile = config.key;
 const certificateFile = config.cert;
@@ -33,6 +33,10 @@ let ETHER_EXCHANGE = 0.000583;
 let EURO_EXCHANGE = 1.0;
 let REGULARITY_RATIO = 0.1;
 let INITIAL_NUM_COINS = 10;
+let INITIAL_NUM_CHEAT_WEEKS = 2;
+let INITIAL_DISTANCE_IN_CURRENT_PERIOD = 1;
+let INITIAL_PERCENTAGE_IN_CURRENT_PERIOD = 0.1;
+
 let web3;
 
 const STATIC_PUB_KEY_WATCH = "0x290CEE9385cE6DdcC4FFfb59C607D4B2E740b951";
@@ -44,13 +48,14 @@ const CONTRACT_ADDRESS = "0xbF0F633dE6844Fc52d4B857277FBb036fa5814e5"
 let state = {
     user_Account: STATIC_PUB_KEY_USER,
     watch_Account: STATIC_PUB_KEY_WATCH,
-    distance_In_Current_Period: 1,
-    percentage_In_Current_Period: 0.1,
+    distance_In_Current_Period: INITIAL_DISTANCE_IN_CURRENT_PERIOD,
+    percentage_In_Current_Period: INITIAL_PERCENTAGE_IN_CURRENT_PERIOD,
     coins: INITIAL_NUM_COINS,
     txhistory: [],
     regularity: 0.35,
     total_Rewards_in_Ether: 0,
-    total_Rewards_in_Euro: 0
+    total_Rewards_in_Euro: 0,
+    cheat_Weeks: INITIAL_NUM_CHEAT_WEEKS
 }
 
 let coins_Received = false;
@@ -144,6 +149,8 @@ module.exports.zahleInEuroAus = function(request, response) {
         response.json({ message: "Not enough coins left." })
     } else {
         state.coins -= value;
+        console.log("before send token")
+        send_Token(value, "watch");
         state.total_Rewards_in_Euro += value;
         // process visa pay out
         pushFundsRequest.amount = value.toString();
@@ -156,6 +163,19 @@ module.exports.zahleInEuroAus = function(request, response) {
             }
         });
 
+        console.log(value);
+        response.json({ date: new Date(), value: value });
+    }
+}
+
+module.exports.benutzeCheatWeek = function(request, response) {
+    let value = request.body.value;
+
+    if (state.cheat_Weeks < value) {
+        response.json({ message: "Not enough cheat weeks left." })
+    } else {
+        state.cheat_Weeks -= value;
+        state.regularity += value * REGULARITY_RATIO;
         console.log(value);
         response.json({ date: new Date(), value: value });
     }
@@ -186,11 +206,11 @@ function reset() {
         initial = true
         return
     }
-    state.distance_In_Current_Period = 0;
-    state.percentage_In_Current_Period = 0;
+    state.distance_In_Current_Period = INITIAL_DISTANCE_IN_CURRENT_PERIOD;
+    state.percentage_In_Current_Period = INITIAL_PERCENTAGE_IN_CURRENT_PERIOD;
     coins_Received = false;
+    cheat_Weeks = INITIAL_NUM_CHEAT_WEEKS;
 }
-
 
 function getBalance() {
     return new Promise((resolve, reject) => {
@@ -301,7 +321,6 @@ function connect(_node_Url = process.env.NODE_URL) {
         console.log(`Connected to Node at ${process.env.NODE_URL}`)
     }
 }
-
 
 function update_Exchange_Rate() {
     request('https://api.coinmarketcap.com/v1/ticker/', function(error, response, body) {

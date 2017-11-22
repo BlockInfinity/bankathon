@@ -1,15 +1,15 @@
 {
   "contractName": "SampleRecipientThrow",
   "abi": [],
-  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a72305820b09a2a32cc02e6757623b87d4f2ec3e9f022166435ddaeca809281c93fdfc64c0029",
-  "deployedBytecode": "0x6060604052600080fd00a165627a7a72305820b09a2a32cc02e6757623b87d4f2ec3e9f022166435ddaeca809281c93fdfc64c0029",
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a72305820ddd5e8a31d65a08647246558d287d7b0be0ae5bf37c33e631ae257a21c64d80a0029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a72305820ddd5e8a31d65a08647246558d287d7b0be0ae5bf37c33e631ae257a21c64d80a0029",
   "sourceMap": "220:33:4:-;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "220:33:4:-;;;;;",
   "source": "/*\nThis is an example contract that helps test the functionality of the approveAndCall() functionality of HumanStandardToken.sol.\nThis one will throw and thus needs to propagate the error up.\n*/\npragma solidity ^0.4.8;\n\ncontract SampleRecipientThrow {\n}\n",
-  "sourcePath": "/home/mgsgde/bankathon/Tokens/contracts/SampleRecipientThrow.sol",
+  "sourcePath": "/Users/matthiasstumpp/Workspace/BlockInfinity/bankathon/Tokens/contracts/SampleRecipientThrow.sol",
   "ast": {
     "attributes": {
-      "absolutePath": "/home/mgsgde/bankathon/Tokens/contracts/SampleRecipientThrow.sol",
+      "absolutePath": "/Users/matthiasstumpp/Workspace/BlockInfinity/bankathon/Tokens/contracts/SampleRecipientThrow.sol",
       "exportedSymbols": {
         "SampleRecipientThrow": [
           351
@@ -59,7 +59,11 @@
     "name": "SourceUnit",
     "src": "195:59:4"
   },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.18+commit.9cf6e910.Emscripten.clang"
+  },
   "networks": {},
-  "schemaVersion": "1.0.0",
-  "updatedAt": "2017-11-22T21:58:11.164Z"
+  "schemaVersion": "1.0.1",
+  "updatedAt": "2017-11-22T21:59:28.438Z"
 }

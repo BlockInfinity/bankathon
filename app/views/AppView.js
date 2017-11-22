@@ -35,7 +35,8 @@ class AppView extends Component {
             totalRewardsInEther: 0,
             modalCryptoIsOpen: false,
             modalEuroIsOpen: false,
-            regularity: 0
+            regularity: 0,
+            cheakWeeks: 0
         }
 
         this.openEuroModal = this.openEuroModal.bind(this);
@@ -44,6 +45,7 @@ class AppView extends Component {
         this.closeCryptoModal = this.closeCryptoModal.bind(this);
         this.auszahlenInCrypto = this.auszahlenInCrypto.bind(this);
         this.auszahlenInEuro = this.auszahlenInEuro.bind(this);
+        this.useCheatWeek = this.useCheatWeek.bind(this);
     }
 
     componentDidMount() {
@@ -62,7 +64,8 @@ class AppView extends Component {
                         euro: responseJson.state.euro,
                         txhistory: responseJson.state.txhistory,
                         totalRewardsInEther: responseJson.state.total_Rewards_in_Ether,
-                        regularity: responseJson.state.regularity
+                        regularity: responseJson.state.regularity,
+                        cheatWeeks: responseJson.state.cheat_Weeks
                     })
                 })
                 .catch((error) => {
@@ -73,7 +76,10 @@ class AppView extends Component {
 
     openEuroModal() {
         if (this.state.coins > 0) {
-            this.setState({modalEuroIsOpen: true});
+            this.setState({
+                coinsAuszahlen: this.state.coins,
+                modalEuroIsOpen: true
+            });
         }
     }
 
@@ -83,7 +89,10 @@ class AppView extends Component {
 
     openCryptoModal() {
         if (this.state.coins > 0) {
-            this.setState({modalCryptoIsOpen: true});
+            this.setState({
+                coinsAuszahlen: this.state.coins,
+                modalCryptoIsOpen: true
+            });
         }
     }
 
@@ -129,6 +138,26 @@ class AppView extends Component {
         });
     }
 
+    useCheatWeek() {
+        let value = 1;
+        if (this.state.cheatWeeks > 0) {
+            this.setState({
+              cheatWeeks: this.state.cheatWeeks-value
+            }, () => {
+                return fetch(ENDPOINT_URL + '/benutzeCheatWeek', {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    value: value
+                  })
+                })
+            });
+        }
+    }
+
     render() {
         return (
             <div>
@@ -140,8 +169,8 @@ class AppView extends Component {
                 <div className="progress-bar-wrapper">
                     <Progress bar color="success" value={this.state.percentageInCurrentPeriod * 100}>{this.state.percentageInCurrentPeriod * 100} %</Progress>
                 </div>
-                <div className="progress-circle">
-                    <div id="progress-value">2</div>
+                <div className="progress-circle" onClick={this.useCheatWeek}>
+                    <div id="progress-value">{this.state.cheatWeeks}</div>
                     <Circle percent={this.state.regularity * 100} strokeWidth="10" strokeColor="#22ace3" trailWidth="10" trailColor="#77d1ed"/>
                 </div>
 
