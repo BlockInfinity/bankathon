@@ -1,3 +1,4 @@
+
 {
   "name": "inspinia-reactjs",
   "version": "2.7.0",
@@ -53,6 +54,7 @@
     "mocha": "^4.0.1",
     "npm-run-all": "^4.1.1",
     "rc-progress": "^2.2.4",
+    "randomstring": "^1.1.5",
     "react": "^0.14.6",
     "react-bootstrap": "^0.28.3",
     "react-dom": "^0.14.6",
@@ -69,5 +71,10 @@
     "tedious": "^2.0.1",
     "truffle-contract": "^3.0.1",
     "web3": "^0.19.0"
+  },
+  "jshintConfig": {
+    "options": {
+      "mocha": true
+    }
   }
 }
