@@ -12,15 +12,19 @@ app.use('/', express.static('public'))
 
 // Parameters: request.body.data
 app.post('/sendeBewegungsdaten', (req, res) => {
-    api.sende_Bewegungsdaten(req, res);
+    api.sendeBewegungsdaten(req, res);
 })
 
 app.get('/state', (req, res) => {
-    api.get_State(req, res);
+    api.getState(req, res);
 })
 
-app.post('/zahleAus', (req, res) => {
-    api.zahle_Aus(req, res);
+app.post('/zahleInKryptoAus', (req, res) => {
+    api.zahleInKryptoAus(req, res);
+})
+
+app.post('/zahleInEuroAus', (req, res) => {
+    api.zahleInEuroAus(req, res);
 })
 
 app.listen(8000, function() {
