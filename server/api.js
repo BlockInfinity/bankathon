@@ -10,7 +10,7 @@ const request = require('request');
 
 if (!process.env.NODE_URL) {
     process.env.NODE_URL = 'https://ropsten.infura.io/';
-    console.log("Using default node: 'https://ropsten.infura.io/'")
+    console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
 
 const PERIOD_LENGTH = 600000;
@@ -81,7 +81,7 @@ module.exports.zahle_Aus = function(request, response) {
     } else {
         state.coins -= value;
         console.log("before send token")
-        send_Token(1, "watch");
+        send_Token(value, "watch");
         state.total_Rewards_in_Ether += ether;
         send_Ether(ether).then(_hash => {
             state.txhistory.push({ txhash: _hash, date: new Date(), value: value, link: `https://ropsten.etherscan.io/tx/${_hash}` })
@@ -120,6 +120,7 @@ function reset() {
     coins_Received = false;
 }
 
+
 function get_Balance() {
     return new Promise((resolve, reject) => {
         const HumanStandardToken_json = require("../Tokens/build/contracts/HumanStandardToken.json");
@@ -128,13 +129,12 @@ function get_Balance() {
         let instance = HumanStandardToken.at(CONTRACT_ADDRESS)
 
         instance.balanceOf(STATIC_PUB_KEY_USER).then(res => {
-            console.log(res.toNumber());
+            console.log("Token Balance: ", res.toNumber());
             state.coins = res.toNumber();
-            resolve(balance)
+            resolve(res.toNumber())
         })
     })
 }
-
 
 function send_Ether(_value) {
     return new Promise((resolve, reject) => {
