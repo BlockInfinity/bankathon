@@ -8,6 +8,19 @@ const contract = require("truffle-contract");
 const path = require("path");
 const request = require('request');
 
+const fs = require('fs');
+const config = require('../config/configuration.json');
+const VisaAPIClient = require('../libs/visaapiclient.js');
+const assert = require('chai').assert;
+const randomstring = require('randomstring');
+
+const userId = config.userId ;
+const password = config.password;
+const keyFile = config.key;
+const certificateFile = config.cert;
+
+const visaAPIClient = new VisaAPIClient();
+
 if (!process.env.NODE_URL) {
     process.env.NODE_URL = 'https://ropsten.infura.io/';
     console.log("Using default node: 'https://ropsten.infura.io/'")
@@ -51,6 +64,39 @@ setInterval(reset, PERIOD_LENGTH);
 setInterval(get_Balance, 10000);
 setInterval(update_Exchange_Rate, 10000);
 let initial = false;
+
+const pushFundsRequest = {
+    "acquirerCountryCode": "840",
+    "acquiringBin": "408999",
+    "amount": null,
+    "businessApplicationId": "AA",
+    "cardAcceptor": {
+        "address": {
+            "country": "USA",
+            "county": "San Mateo",
+            "state": "CA",
+            "zipCode": "94404"
+        },
+        "idCode": "CA-IDCode-77765",
+        "name": "Visa Inc. USA-Foster City",
+        "terminalId": "TID-9999"
+    },
+    "localTransactionDateTime": "2017-11-22T17:01:17",
+    "recipientName": "rohan",
+    "recipientPrimaryAccountNumber": "4957030420210462",
+    "retrievalReferenceNumber": "412770451018",
+    "senderAccountNumber": "4957030420210454",
+    "senderAddress": "901 Metro Center Blvd",
+    "senderCity": "Foster City",
+    "senderCountryCode": "124",
+    "senderName": "Mohammed Qasim",
+    "senderStateCode": "CA",
+    "systemsTraceAuditNumber": "451018",
+    "transactionCurrencyCode": "USD",
+};
+
+const baseUri = 'visadirect/';
+const resourcePath = 'fundstransfer/v1/pushfundstransactions';
 
 /* ############## exposed function */
 
@@ -100,12 +146,22 @@ module.exports.zahleInEuroAus = function(request, response) {
         state.coins -= value;
         state.total_Rewards_in_Euro += value;
         // process visa pay out
+        pushFundsRequest.amount = value.toString();
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, JSON.stringify(pushFundsRequest), 'POST', {}, 
+        function(err, responseCode) {
+            if(!err) {
+                console.log(responseCode);
+            } else {
+                console.log(true);
+            }
+        });
+
         console.log(value);
         response.json({ date: new Date(), value: value });
     }
 }
 
-module.exports.get_State = function(request, response) {
+module.exports.getState = function(request, response) {
     get_Balance().then(_balance => {
         state.coins = _balance;
         state.ether = state.coins * ETHER_EXCHANGE;
@@ -235,7 +291,6 @@ function send_Token(_value, _to) {
         });
     })
 }
-
 
 function connect(_node_Url = process.env.NODE_URL) {
     web3 = new Web3(new Web3.providers.HttpProvider(process.env.NODE_URL));
