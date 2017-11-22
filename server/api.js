@@ -9,7 +9,8 @@ const path = require("path");
 const request = require('request');
 
 if (!process.env.NODE_URL) {
-    throw new Error("process.env.NODE_URL not set")
+    process.env.NODE_URL = 'https://ropsten.infura.io/';
+    console.log("Using default node: 'https://ropsten.infura.io/'")
 }
 
 const PERIOD_LENGTH = 600000;
@@ -62,7 +63,6 @@ module.exports.sende_Bewegungsdaten = function(request, response) {
     if (state.percentage_In_Current_Period >= 1 && coins_Received == false) {
         state.percentage_In_Current_Period = 1;
         state.coins++;
-        console.log("before send token in sende sende_Bewegungsdaten")
         send_Token(1, "user");
         state.regularity += REGULARITY_RATIO;
         coins_Received = true;
@@ -122,7 +122,7 @@ function reset() {
 
 function get_Balance() {
     return new Promise((resolve, reject) => {
-        const HumanStandardToken_json = require(path.join('..', 'Tokens', 'build', 'contracts', 'HumanStandardToken.json'));
+        const HumanStandardToken_json = require("../Tokens/build/contracts/HumanStandardToken.json");
         const HumanStandardToken = contract(HumanStandardToken_json);
         HumanStandardToken.setProvider(new Web3.providers.HttpProvider(process.env.NODE_URL));
         let instance = HumanStandardToken.at(CONTRACT_ADDRESS)
@@ -175,11 +175,13 @@ function send_Token(_value, _to) {
 
         switch (_to) {
             case "user":
+                console.log("in user");
                 fromPub = STATIC_PUB_KEY_WATCH;
                 fromPriv = STATIC_PRIVATE_KEY_WATCH;
                 toPub = STATIC_PUB_KEY_USER;
                 break;
             case "watch":
+                console.log("in watch")
                 fromPub = STATIC_PUB_KEY_USER;
                 fromPriv = STATIC_PRIVATE_KEY_USER;
                 toPub = STATIC_PUB_KEY_WATCH;
@@ -194,8 +196,6 @@ function send_Token(_value, _to) {
         let nonce = web3.eth.getTransactionCount(fromPub);
         let truffleMethodData = instance.transfer.request(toPub, _value);
         let data = truffleMethodData.params[0].data;
-
-        console.log("toPub, fromPub, fromPriv, CONTRACT_ADDRESS", toPub, fromPub, fromPriv, CONTRACT_ADDRESS)
 
         let rawTx = {
             nonce: nonce,
@@ -212,7 +212,7 @@ function send_Token(_value, _to) {
         tx.sign(privateKey);
 
         let serializedTx = tx.serialize();
-
+        console.log("executing sendRawTransaction")
         web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
             if (!err) {
                 console.log(hash)
