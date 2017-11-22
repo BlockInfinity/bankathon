@@ -3,8 +3,8 @@ import { Progress, Input } from 'reactstrap';
 import { Circle } from 'rc-progress';
 import Modal from 'react-modal';
 
-//const ENDPOINT_URL = 'http://52.232.41.117:8000'
-const ENDPOINT_URL = 'http://localhost:8000'
+const ENDPOINT_URL = 'http://52.232.41.117:8000'
+// const ENDPOINT_URL = 'http://localhost:8000'
 
 const customStyles = {
   content : {
