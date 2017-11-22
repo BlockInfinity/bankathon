@@ -7,6 +7,8 @@ var server = require('../server');
 const assert = require('assert');
 const co = require('co');
 const Web3 = require('web3');
+const sleep = require("sleep");
+
 let web3;
 
 connect();
@@ -53,6 +55,7 @@ describe('api.test.js', function() {
 
     it('zahleAus', function(done) {
         this.timeout(25000)
+        sleep.sleep(120)
         request(server)
             .post('/zahleAus')
             .send({ value: 1 })
@@ -61,6 +64,7 @@ describe('api.test.js', function() {
             .expect(200)
             .end(function(err, res) {
                 if (err) throw new Error(err);
+                console.log(res.body);
                 assert(res.body.txhash.startsWith("0x"), `${res.body.txhash} startsWith("0x")`)
                 done();
             });

@@ -1,0 +1,3 @@
+[submodule "Tokens"]
+	path = Tokens
+	url = https://github.com/ConsenSys/Tokens
