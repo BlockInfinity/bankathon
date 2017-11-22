@@ -27,6 +27,10 @@ app.post('/zahleInEuroAus', (req, res) => {
     api.zahleInEuroAus(req, res);
 })
 
+app.post('/benutzeCheatWeek', (req, res) => {
+    api.benutzeCheatWeek(req, res);
+})
+
 app.listen(8000, function() {
     console.log('App listening on port 8000!');
 });
