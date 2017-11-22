@@ -3,7 +3,8 @@ import { Progress, Input } from 'reactstrap';
 import { Circle } from 'rc-progress';
 import Modal from 'react-modal';
 
-const ENDPOINT_URL = 'http://52.232.41.117:8000'
+//const ENDPOINT_URL = 'http://52.232.41.117:8000'
+const ENDPOINT_URL = 'http://localhost:8000'
 
 const customStyles = {
   content : {
@@ -102,12 +103,12 @@ class AppView extends Component {
                 <div>
                     <div id="euro-value">{this.state.euro} &euro;</div>
                     <div id="ether-value" onClick={this.openModal}>{this.state.ether}</div>
-                    <div id="debicoins">{this.state.coins}</div>
+                    <div id="health-coins">{this.state.coins}</div>
                 </div>
-                <div className="progressbar">
+                <div className="progress-bar-wrapper">
                     <Progress bar color="success" value={this.state.percentageInCurrentPeriod * 100}>{this.state.percentageInCurrentPeriod * 100} %</Progress>
                 </div>
-                <div className="progressCircle">
+                <div className="progress-circle">
                     <div id="progress-value">2</div>
                     <Circle percent={this.state.regularity * 100} strokeWidth="10" strokeColor="#22ace3" trailWidth="10" trailColor="#77d1ed"/>
                 </div>
@@ -119,7 +120,7 @@ class AppView extends Component {
                   contentLabel="Auszahlen"
                 >
                   <h2>Auszahlen</h2>
-                  <div>DebiCoins als Ether auszahlen:</div>
+                  <div>HealthCoins als Ether auszahlen:</div>
                   <form>
                     <Input type="number" step="1" value={this.state.coinsAuszahlen} onChange={() => { console.log() }}/>
                     <button onClick={this.closeModal}>Abbrechen</button>
