@@ -66,7 +66,7 @@ let balance = 0;
 
 connect();
 setInterval(reset, PERIOD_LENGTH);
-setInterval(get_Balance, 10000);
+setInterval(getBalance, 10000);
 setInterval(update_Exchange_Rate, 10000);
 let initial = false;
 
@@ -182,7 +182,7 @@ module.exports.benutzeCheatWeek = function(request, response) {
 }
 
 module.exports.getState = function(request, response) {
-    get_Balance().then(_balance => {
+    getBalance().then(_balance => {
         state.coins = _balance;
         state.ether = state.coins * ETHER_EXCHANGE;
         state.euro = state.coins * EURO_EXCHANGE;
@@ -191,8 +191,8 @@ module.exports.getState = function(request, response) {
     })
 }
 
-module.exports.get_Balance = function(request, response) {
-    get_Balance().then(_balance => {
+module.exports.getBalance = function(request, response) {
+    getBalance().then(_balance => {
         response.json({ balance: _balance });
     }).catch(err => {
         response.status.json({ message: err });
@@ -212,7 +212,7 @@ function reset() {
     cheat_Weeks = INITIAL_NUM_CHEAT_WEEKS;
 }
 
-function get_Balance() {
+function getBalance() {
     return new Promise((resolve, reject) => {
         const HumanStandardToken_json = require("../Tokens/build/contracts/HumanStandardToken.json");
         const HumanStandardToken = contract(HumanStandardToken_json);
