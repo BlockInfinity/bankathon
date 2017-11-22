@@ -23,7 +23,7 @@ const visaAPIClient = new VisaAPIClient();
 
 if (!process.env.NODE_URL) {
     process.env.NODE_URL = 'https://ropsten.infura.io/';
-    console.log("Using default node: 'https://ropsten.infura.io/'")
+    console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
 
 const PERIOD_LENGTH = 600000;
@@ -191,6 +191,7 @@ function reset() {
     coins_Received = false;
 }
 
+
 function get_Balance() {
     return new Promise((resolve, reject) => {
         const HumanStandardToken_json = require("../Tokens/build/contracts/HumanStandardToken.json");
@@ -199,9 +200,9 @@ function get_Balance() {
         let instance = HumanStandardToken.at(CONTRACT_ADDRESS)
 
         instance.balanceOf(STATIC_PUB_KEY_USER).then(res => {
-            console.log(res.toNumber());
+            console.log("Token Balance: ", res.toNumber());
             state.coins = res.toNumber();
-            resolve(balance)
+            resolve(res.toNumber())
         })
     })
 }
