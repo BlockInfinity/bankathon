@@ -1,1 +1,0 @@
-{"err":null,"data":{"statusCode":200,"headers":{"date":"Wed, 22 Nov 2017 14:11:18 GMT","content-type":"application/json","content-length":"47","connection":"close","server":"nginx/1.10.3 (Ubuntu)","vary":"Origin"},"text":"{\"jsonrpc\":\"2.0\",\"id\":9999999999,\"result\":true}"}}
