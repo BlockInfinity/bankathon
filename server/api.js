@@ -19,6 +19,7 @@ const REWARD_IN_ETHER_PER_PERIOD = 0.001;
 let ETHER_EXCHANGE = 0.000583;
 let EURO_EXCHANGE = 1.0;
 let REGULARITY_RATIO = 0.1;
+let INITIAL_NUM_COINS = 10;
 let web3;
 
 const STATIC_PUB_KEY_WATCH = "0x290CEE9385cE6DdcC4FFfb59C607D4B2E740b951";
@@ -27,16 +28,16 @@ const STATIC_PUB_KEY_USER = '0xf0433Ad2cddA1179D764a1d2410aB90cFB124B35';
 const STATIC_PRIVATE_KEY_USER = "96b31a3253b8c18141b202c847043f92adac3d2d4d8f6a55037421028fa7f6fa"
 const CONTRACT_ADDRESS = "0xbF0F633dE6844Fc52d4B857277FBb036fa5814e5"
 
-
 let state = {
     user_Account: STATIC_PUB_KEY_USER,
     watch_Account: STATIC_PUB_KEY_WATCH,
     distance_In_Current_Period: 1,
     percentage_In_Current_Period: 0.1,
-    coins: 0,
+    coins: INITIAL_NUM_COINS,
     txhistory: [],
     regularity: 0.35,
-    total_Rewards_in_Ether: 0
+    total_Rewards_in_Ether: 0,
+    total_Rewards_in_Euro: 0
 }
 
 let coins_Received = false;
@@ -53,7 +54,7 @@ let initial = false;
 
 /* ############## exposed function */
 
-module.exports.sende_Bewegungsdaten = function(request, response) {
+module.exports.sendeBewegungsdaten = function(request, response) {
     let new_Distance = request.body.distance;
     let diff = new_Distance - old_Distance;
 
@@ -72,7 +73,7 @@ module.exports.sende_Bewegungsdaten = function(request, response) {
     response.json({ state });
 }
 
-module.exports.zahle_Aus = function(request, response) {
+module.exports.zahleInKryptoAus = function(request, response) {
     let value = request.body.value;
     let ether = value * ETHER_EXCHANGE;
 
@@ -87,6 +88,20 @@ module.exports.zahle_Aus = function(request, response) {
             state.txhistory.push({ txhash: _hash, date: new Date(), value: value, link: `https://ropsten.etherscan.io/tx/${_hash}` })
             response.json({ txhash: _hash, date: new Date(), value: value, link: `https://ropsten.etherscan.io/tx/${_hash}` });
         })
+    }
+}
+
+module.exports.zahleInEuroAus = function(request, response) {
+    let value = request.body.value;
+
+    if (state.coins < value) {
+        response.json({ message: "Not enough coins left." })
+    } else {
+        state.coins -= value;
+        state.total_Rewards_in_Euro += value;
+        // process visa pay out
+        console.log(value);
+        response.json({ date: new Date(), value: value });
     }
 }
 
@@ -165,7 +180,6 @@ function send_Ether(_value) {
         });
     })
 }
-
 
 function send_Token(_value, _to) {
     return new Promise((resolve, reject) => {

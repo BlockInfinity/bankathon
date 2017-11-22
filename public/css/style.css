@@ -5,25 +5,34 @@ body {
 #euro-value {
 	position: absolute;
 	top: 136px;
-	left: 92px;
+	left: 54px;
 	font-size: 35px;
 	color: white;
+	width: 100px;
+	height: 40px;
+	text-align: right;
 }
 
 #health-coins {
 	position: absolute;
-	top: 140px;
-	left: 192px;
-	font-size: 30px;
+	top: 144px;
+	left: 180px;
+	font-size: 24px;
 	color: #0aaae5;
+	width: 40px;
+	height: 40px;
+	text-align: center;
 }
 
 #ether-value {
 	position: absolute;
 	top: 145px;
-	left: 265px;
+	left: 258px;
 	font-size: 24px;
 	color: white;
+	width: 100px;
+	height: 40px;
+	text-align: left;
 }
 
 .progress-bar-wrapper {
