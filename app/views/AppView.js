@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Progress, Input } from 'reactstrap';
 import { Circle } from 'rc-progress';
 import Modal from 'react-modal';
+import { browserHistory, Link, Location } from 'react-router';
 
 const ENDPOINT_URL = 'http://52.232.41.117:8000'
-// const ENDPOINT_URL = 'http://localhost:8000'
+//const ENDPOINT_URL = 'http://localhost:8000'
 
 const customStyles = {
   content : {
@@ -36,7 +37,12 @@ class AppView extends Component {
             modalCryptoIsOpen: false,
             modalEuroIsOpen: false,
             regularity: 0,
-            cheakWeeks: 0
+            cheakWeeks: 0,
+            modalCryptoConfirmIsOpen: false,
+            modalEuroConfirmIsOpen: false,
+            confirmationCrypto: '...',
+            confirmationEuro: '...',
+            linkToUserAccount: null
         }
 
         this.openEuroModal = this.openEuroModal.bind(this);
@@ -46,6 +52,8 @@ class AppView extends Component {
         this.auszahlenInCrypto = this.auszahlenInCrypto.bind(this);
         this.auszahlenInEuro = this.auszahlenInEuro.bind(this);
         this.useCheatWeek = this.useCheatWeek.bind(this);
+        this.closeCryptoConfirmModal = this.closeCryptoConfirmModal.bind(this);
+        this.closeEuroConfirmModal = this.closeEuroConfirmModal.bind(this);
     }
 
     componentDidMount() {
@@ -65,7 +73,8 @@ class AppView extends Component {
                         txhistory: responseJson.state.txhistory,
                         totalRewardsInEther: responseJson.state.total_Rewards_in_Ether,
                         regularity: responseJson.state.regularity,
-                        cheatWeeks: responseJson.state.cheat_Weeks
+                        cheatWeeks: responseJson.state.cheat_Weeks,
+                        linkToUserAccount: responseJson.state.link_to_user_account
                     })
                 })
                 .catch((error) => {
@@ -77,7 +86,7 @@ class AppView extends Component {
     openEuroModal() {
         if (this.state.coins > 0) {
             this.setState({
-                coinsAuszahlen: this.state.coins,
+                coinsAuszahlen: 1,
                 modalEuroIsOpen: true
             });
         }
@@ -90,7 +99,7 @@ class AppView extends Component {
     openCryptoModal() {
         if (this.state.coins > 0) {
             this.setState({
-                coinsAuszahlen: this.state.coins,
+                coinsAuszahlen: 1,
                 modalCryptoIsOpen: true
             });
         }
@@ -100,7 +109,16 @@ class AppView extends Component {
         this.setState({modalCryptoIsOpen: false});
     }
 
+    closeCryptoConfirmModal() {
+        this.setState({modalCryptoConfirmIsOpen: false});
+    }
+
+    closeEuroConfirmModal() {
+        this.setState({modalEuroConfirmIsOpen: false});
+    }
+
     auszahlenInCrypto() {
+        let self = this
         this.setState({
           modalCryptoIsOpen: !this.state.modalCryptoIsOpen
         }, () => {
@@ -114,12 +132,22 @@ class AppView extends Component {
                   body: JSON.stringify({
                     value: this.state.coinsAuszahlen
                   })
-                })
+                }).then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(json) {
+                    console.log('Request successful', json);
+                    self.setState({
+                        modalCryptoConfirmIsOpen: true,
+                        confirmationCrypto: json.link
+                    })
+                  })
             }
         });
     }
 
     auszahlenInEuro() {
+        let self = this
         this.setState({
           modalEuroIsOpen: !this.state.modalEuroIsOpen
         }, () => {
@@ -133,7 +161,16 @@ class AppView extends Component {
                   body: JSON.stringify({
                     value: this.state.coinsAuszahlen
                   })
-                })
+                }).then(function(response) {
+                return response.json();
+                  })
+                  .then(function(json) {
+                    console.log('Request successful', json);
+                    self.setState({
+                        modalEuroConfirmIsOpen: true,
+                        confirmationEuro: json.transactionId
+                    })
+                  })
             }
         });
     }
@@ -163,7 +200,7 @@ class AppView extends Component {
             <div>
                 <div>
                     <div id="euro-value" onClick={this.openEuroModal}>{this.state.euro} &euro;</div>
-                    <div id="health-coins">{this.state.coins}</div>
+                    <a href={this.state.linkToUserAccount} target="_blank"><div id="health-coins">{this.state.coins}</div></a>
                     <div id="ether-value" onClick={this.openCryptoModal}>{this.state.ether.toString().substring(0, 5)}</div>
                 </div>
                 <div className="progress-bar-wrapper">
@@ -190,6 +227,19 @@ class AppView extends Component {
                 </Modal>
 
                 <Modal
+                  isOpen={this.state.modalCryptoConfirmIsOpen}
+                  onRequestClose={this.closeCryptoConfirmModal}
+                  style={customStyles}
+                  contentLabel="Auszahlung in Ether Erfolgreich"
+                >
+                  <h2>Transkation ID:</h2>
+                  <a href={this.state.confirmationCrypto}>Etherscan</a>
+                  <form>
+                    <button onClick={this.closeCryptoConfirmModal}>Ok</button>
+                  </form>
+                </Modal>
+
+                <Modal
                   isOpen={this.state.modalEuroIsOpen}
                   onRequestClose={this.closeEuroModal}
                   style={customStyles}
@@ -201,6 +251,19 @@ class AppView extends Component {
                     <Input type="text" maxValue={10} value={this.state.coinsAuszahlen} onChange={(ev) => { this.setState({ coinsAuszahlen: ev.target.value }) }}/>
                     <button onClick={this.closeEuroModal}>Abbrechen</button>
                     <button onClick={this.auszahlenInEuro}>Ok</button>
+                  </form>
+                </Modal>
+
+                <Modal
+                  isOpen={this.state.modalEuroConfirmIsOpen}
+                  onRequestClose={this.closeEuroConfirmModal}
+                  style={customStyles}
+                  contentLabel="Auszahlung in Euro Erfolgreich"
+                >
+                  <h2>Transkation ID:</h2>
+                  <span>{this.state.confirmationEuro}</span>
+                  <form>
+                    <button onClick={this.closeEuroConfirmModal}>Ok</button>
                   </form>
                 </Modal>
             </div>

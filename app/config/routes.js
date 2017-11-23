@@ -4,10 +4,11 @@ import Blank from '../components/layouts/Blank';
 
 import AppView from '../views/AppView';
 
-import { Route, Router, IndexRedirect, browserHistory} from 'react-router';
+import { Route, Router, IndexRedirect, browserHistory } from 'react-router';
 
 export default (
     <Router history={browserHistory}>
-        <Route path="/" component={AppView}> </Route>
+        <IndexRedirect to="/" />
+        <Route exact path="/" component={AppView}> </Route>
     </Router>
 );
