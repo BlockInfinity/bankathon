@@ -209,7 +209,7 @@ function reset() {
     state.distance_In_Current_Period = INITIAL_DISTANCE_IN_CURRENT_PERIOD;
     state.percentage_In_Current_Period = INITIAL_PERCENTAGE_IN_CURRENT_PERIOD;
     coins_Received = false;
-    cheat_Weeks = INITIAL_NUM_CHEAT_WEEKS;
+    state.cheat_Weeks = INITIAL_NUM_CHEAT_WEEKS;
 }
 
 function getBalance() {
