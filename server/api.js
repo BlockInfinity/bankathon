@@ -66,7 +66,6 @@ let balance = 0;
 /* ############## execute */
 
 connect();
-send_Token(5, "user");
 setInterval(reset, PERIOD_LENGTH);
 setInterval(getBalance, 10000);
 setInterval(update_Exchange_Rate, 10000);
