@@ -3,8 +3,8 @@
   "sharedSecret": "NOA9ng3x$vhs2z1}CPgohvy1Lru/tah@eyWik3X+",
   "userId": "TSAJTHKTLCG6554M2OA821tjh_uZo3uDrwegl927XZOHZvZhE",
   "password": "S5g0GMLBNXMtjRk1HdA2OMV5c82z8evmBr80u",
-  "cert": "/Users/matthiasstumpp/Workspace/BlockInfinity/bankathon/security/cert.pem",
-  "key": "/Users/matthiasstumpp/Workspace/BlockInfinity/bankathon/security/key_9deddce6-a3fe-4118-9bc2-b309ec680a31.pem",
+  "cert": "/home/mcblockfit/bankathon_v1/security/cert.pem",
+  "key": "/home/mcblockfit/bankathon_v1/security/key_9deddce6-a3fe-4118-9bc2-b309ec680a31.pem",
   "checkoutCallId" : "{put your visa checkout generated callId here}",
   "visaUrl": "https://sandbox.api.visa.com/"
 }
