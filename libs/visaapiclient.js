@@ -65,7 +65,7 @@ VisaAPIClient.prototype.doMutualAuthRequest = function(path, requestBody, method
 	}, function(error, response, body) {
 		if (!error) {
 			logResponseBody(response, body);
-			callback(null, response.statusCode);
+			callback(null, response.statusCode, body);
 		} else {
 			console.log(error);
 			callback(error);

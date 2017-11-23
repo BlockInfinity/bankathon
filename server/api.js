@@ -156,16 +156,15 @@ module.exports.zahleInEuroAus = function(request, response) {
         // process visa pay out
         pushFundsRequest.amount = value.toString();
         visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, JSON.stringify(pushFundsRequest), 'POST', {},
-            function(err, responseCode) {
+            function(err, responseCode, data) {
                 if (!err) {
-                    console.log(responseCode);
+                    console.log(data);
+                    let json = JSON.parse(data)
+                    response.json({ date: new Date(), value: value, transactionId: json.transactionIdentifier });
                 } else {
                     console.log(true);
                 }
             });
-
-        console.log(value);
-        response.json({ date: new Date(), value: value });
     }
 }
 
@@ -177,7 +176,6 @@ module.exports.benutzeCheatWeek = function(request, response) {
     } else {
         state.cheat_Weeks -= value;
         state.regularity += value * REGULARITY_RATIO;
-        console.log(value);
         response.json({ date: new Date(), value: value });
     }
 }
