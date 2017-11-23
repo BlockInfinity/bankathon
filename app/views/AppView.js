@@ -233,7 +233,7 @@ class AppView extends Component {
                   contentLabel="Auszahlung in Ether Erfolgreich"
                 >
                   <h2>Transkation ID:</h2>
-                  <a href={this.state.confirmationCrypto}>Etherscan</a>
+                  <a href={this.state.confirmationCrypto} target="_blank">Etherscan</a>
                   <form>
                     <button onClick={this.closeCryptoConfirmModal}>Ok</button>
                   </form>
