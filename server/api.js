@@ -34,7 +34,7 @@ if (!process.env.NODE_URL) {
 // var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
 
 
-const PERIOD_LENGTH = 300000;
+const PERIOD_LENGTH = 180000;
 const DISTANCE_PER_PERIOD = 10;
 const REWARD_IN_ETHER_PER_PERIOD = 0.001;
 let ETHER_EXCHANGE = 0.000583;
