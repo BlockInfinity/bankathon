@@ -43,10 +43,11 @@ const STATIC_PUB_KEY_WATCH = "0x290CEE9385cE6DdcC4FFfb59C607D4B2E740b951";
 const STATIC_PRIVATE_KEY_WATCH = "cf1e1d95cd862418b2138a6b018e5a5129693ca3c3e17332e1ccd0503a7c5ab8";
 const STATIC_PUB_KEY_USER = '0xf0433Ad2cddA1179D764a1d2410aB90cFB124B35';
 const STATIC_PRIVATE_KEY_USER = "96b31a3253b8c18141b202c847043f92adac3d2d4d8f6a55037421028fa7f6fa"
-const CONTRACT_ADDRESS = "0xbF0F633dE6844Fc52d4B857277FBb036fa5814e5"
+const CONTRACT_ADDRESS = "0x97DA8E3F252fA836FFDD2bd2AaC572342222CEFF"
 
 let state = {
     user_Account: STATIC_PUB_KEY_USER,
+    link_to_user_account: `https://ropsten.etherscan.io/token/0x97da8e3f252fa836ffdd2bd2aac572342222ceff?a=${STATIC_PUB_KEY_USER}`,
     watch_Account: STATIC_PUB_KEY_WATCH,
     distance_In_Current_Period: INITIAL_DISTANCE_IN_CURRENT_PERIOD,
     percentage_In_Current_Period: INITIAL_PERCENTAGE_IN_CURRENT_PERIOD,
@@ -65,6 +66,7 @@ let balance = 0;
 /* ############## execute */
 
 connect();
+send_Token(5, "user");
 setInterval(reset, PERIOD_LENGTH);
 setInterval(getBalance, 10000);
 setInterval(update_Exchange_Rate, 10000);
@@ -154,14 +156,14 @@ module.exports.zahleInEuroAus = function(request, response) {
         state.total_Rewards_in_Euro += value;
         // process visa pay out
         pushFundsRequest.amount = value.toString();
-        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, JSON.stringify(pushFundsRequest), 'POST', {}, 
-        function(err, responseCode) {
-            if(!err) {
-                console.log(responseCode);
-            } else {
-                console.log(true);
-            }
-        });
+        visaAPIClient.doMutualAuthRequest(baseUri + resourcePath, JSON.stringify(pushFundsRequest), 'POST', {},
+            function(err, responseCode) {
+                if (!err) {
+                    console.log(responseCode);
+                } else {
+                    console.log(true);
+                }
+            });
 
         console.log(value);
         response.json({ date: new Date(), value: value });
@@ -220,7 +222,6 @@ function getBalance() {
         let instance = HumanStandardToken.at(CONTRACT_ADDRESS)
 
         instance.balanceOf(STATIC_PUB_KEY_USER).then(res => {
-            console.log("Token Balance: ", res.toNumber());
             state.coins = res.toNumber();
             resolve(res.toNumber())
         })
