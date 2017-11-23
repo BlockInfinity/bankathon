@@ -29,9 +29,9 @@ if (!process.env.NODE_URL) {
     console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
 
-var ipfsAPI = require('ipfs-api')
-// connect to ipfs daemon API server
-var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
+// var ipfsAPI = require('ipfs-api')
+// // connect to ipfs daemon API server
+// var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
 
 
 const PERIOD_LENGTH = 300000;
@@ -65,7 +65,7 @@ let state = {
     total_Rewards_in_Ether: 0,
     total_Rewards_in_Euro: 0,
     cheat_Weeks: INITIAL_NUM_CHEAT_WEEKS,
-    ipfs: []
+    // ipfs: []
 }
 
 let coins_Received = false;
@@ -129,7 +129,7 @@ module.exports.sendeBewegungsdaten = function(request, response) {
         coins_Received = true;
         old_Distance = state.distance_In_Current_Period;
         send_Token(1, "user");
-        writeToIpfs({user: STATIC_PUB_KEY_USER, distance: state.distance_In_Current_Period});
+        // writeToIpfs({user: STATIC_PUB_KEY_USER, distance: state.distance_In_Current_Period});
     }
 
     response.json({ state });
@@ -339,14 +339,14 @@ function update_Exchange_Rate() {
 
 
 // takes json object
-function writeToIpfs(_value) {
-    return new Promise((resolve, reject) => {
-        console.log("in writeToIpfs")
-        _value = JSON.stringify(_value);
-        ipfs.files.add(new Buffer(_value), (err, res) => {
-            if (err) reject(err);
-            state.ipfs.push(res[0]);
-            resolve(res);
-        })
-    })
-}
+// function writeToIpfs(_value) {
+//     return new Promise((resolve, reject) => {
+//         console.log("in writeToIpfs")
+//         _value = JSON.stringify(_value);
+//         ipfs.files.add(new Buffer(_value), (err, res) => {
+//             if (err) reject(err);
+//             state.ipfs.push(res[0]);
+//             resolve(res);
+//         })
+//     })
+// }
