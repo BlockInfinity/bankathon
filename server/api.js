@@ -8,6 +8,9 @@ const contract = require("truffle-contract");
 const path = require("path");
 const request = require('request');
 
+
+
+
 const fs = require('fs');
 const config = require('../config/configuration.json');
 const VisaAPIClient = require('../libs/visaapiclient.js');
@@ -25,6 +28,11 @@ if (!process.env.NODE_URL) {
     process.env.NODE_URL = 'https://ropsten.infura.io/';
     console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
+
+var ipfsAPI = require('ipfs-api')
+// connect to ipfs daemon API server
+var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
+
 
 const PERIOD_LENGTH = 300000;
 const DISTANCE_PER_PERIOD = 10;
@@ -328,12 +336,6 @@ function update_Exchange_Rate() {
         console.log("Exchange Rate updated: ", ETHER_EXCHANGE)
     })
 }
-
-var ipfsAPI = require('ipfs-api')
-
-// connect to ipfs daemon API server
-var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
-
 
 
 // takes json object
