@@ -8,6 +8,9 @@ const contract = require("truffle-contract");
 const path = require("path");
 const request = require('request');
 
+
+
+
 const fs = require('fs');
 const config = require('../config/configuration.json');
 const VisaAPIClient = require('../libs/visaapiclient.js');
@@ -25,6 +28,11 @@ if (!process.env.NODE_URL) {
     process.env.NODE_URL = 'https://ropsten.infura.io/';
     console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
+
+// var ipfsAPI = require('ipfs-api')
+// // connect to ipfs daemon API server
+// var ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' }) // leaving out the arguments will default to these values
+
 
 const PERIOD_LENGTH = 300000;
 const DISTANCE_PER_PERIOD = 10;
@@ -56,7 +64,8 @@ let state = {
     regularity: 0.35,
     total_Rewards_in_Ether: 0,
     total_Rewards_in_Euro: 0,
-    cheat_Weeks: INITIAL_NUM_CHEAT_WEEKS
+    cheat_Weeks: INITIAL_NUM_CHEAT_WEEKS,
+    // ipfs: []
 }
 
 let coins_Received = false;
@@ -116,10 +125,11 @@ module.exports.sendeBewegungsdaten = function(request, response) {
     if (state.percentage_In_Current_Period >= 1 && coins_Received == false) {
         state.percentage_In_Current_Period = 1;
         state.coins++;
-        send_Token(1, "user");
         state.regularity += REGULARITY_RATIO;
         coins_Received = true;
         old_Distance = state.distance_In_Current_Period;
+        send_Token(1, "user");
+        // writeToIpfs({user: STATIC_PUB_KEY_USER, distance: state.distance_In_Current_Period});
     }
 
     response.json({ state });
@@ -133,9 +143,8 @@ module.exports.zahleInKryptoAus = function(request, response) {
         response.json({ message: "Not enough coins left." })
     } else {
         state.coins -= value;
-        console.log("before send token")
-        send_Token(value, "watch");
         state.total_Rewards_in_Ether += ether;
+        send_Token(value, "watch");
         send_Ether(ether).then(_hash => {
             state.txhistory.push({ txhash: _hash, date: new Date(), value: value, link: `https://ropsten.etherscan.io/tx/${_hash}` })
             response.json({ txhash: _hash, date: new Date(), value: value, link: `https://ropsten.etherscan.io/tx/${_hash}` });
@@ -327,3 +336,17 @@ function update_Exchange_Rate() {
         console.log("Exchange Rate updated: ", ETHER_EXCHANGE)
     })
 }
+
+
+// takes json object
+// function writeToIpfs(_value) {
+//     return new Promise((resolve, reject) => {
+//         console.log("in writeToIpfs")
+//         _value = JSON.stringify(_value);
+//         ipfs.files.add(new Buffer(_value), (err, res) => {
+//             if (err) reject(err);
+//             state.ipfs.push(res[0]);
+//             resolve(res);
+//         })
+//     })
+// }
