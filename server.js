@@ -10,6 +10,11 @@ app.use(bodyParser.json()); // for parsing application/json
 
 app.use('/', express.static('public'))
 
+app.use(function(req, res, next) {
+    res.header('X-Frame-Options', 'GOFORIT');
+    next();
+});
+
 // Parameters: request.body.data
 app.post('/sendeBewegungsdaten', (req, res) => {
     api.sendeBewegungsdaten(req, res);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Progress, Input } from 'reactstrap';
 import { Circle } from 'rc-progress';
 import Modal from 'react-modal';
+import { browserHistory, Link, Location } from 'react-router';
 
 const ENDPOINT_URL = 'http://52.232.41.117:8000'
 //const ENDPOINT_URL = 'http://localhost:8000'
@@ -40,7 +41,8 @@ class AppView extends Component {
             modalCryptoConfirmIsOpen: false,
             modalEuroConfirmIsOpen: false,
             confirmationCrypto: '...',
-            confirmationEuro: '...'
+            confirmationEuro: '...',
+            linkToUserAccount: null
         }
 
         this.openEuroModal = this.openEuroModal.bind(this);
@@ -71,13 +73,14 @@ class AppView extends Component {
                         txhistory: responseJson.state.txhistory,
                         totalRewardsInEther: responseJson.state.total_Rewards_in_Ether,
                         regularity: responseJson.state.regularity,
-                        cheatWeeks: responseJson.state.cheat_Weeks
+                        cheatWeeks: responseJson.state.cheat_Weeks,
+                        linkToUserAccount: responseJson.state.link_to_user_account
                     })
                 })
                 .catch((error) => {
                     console.log(error)
                 });
-            }, 5000);
+            }, 500);
     }
 
     openEuroModal() {
@@ -197,7 +200,7 @@ class AppView extends Component {
             <div>
                 <div>
                     <div id="euro-value" onClick={this.openEuroModal}>{this.state.euro} &euro;</div>
-                    <div id="health-coins">{this.state.coins}</div>
+                    <a href={this.state.linkToUserAccount} target="_blank"><div id="health-coins">{this.state.coins}</div></a>
                     <div id="ether-value" onClick={this.openCryptoModal}>{this.state.ether.toString().substring(0, 5)}</div>
                 </div>
                 <div className="progress-bar-wrapper">
