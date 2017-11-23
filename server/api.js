@@ -26,7 +26,7 @@ if (!process.env.NODE_URL) {
     console.log("Using default node: 'https://ropsten.infura.io/' as node.")
 }
 
-const PERIOD_LENGTH = 600000;
+const PERIOD_LENGTH = 300000;
 const DISTANCE_PER_PERIOD = 10;
 const REWARD_IN_ETHER_PER_PERIOD = 0.001;
 let ETHER_EXCHANGE = 0.000583;
